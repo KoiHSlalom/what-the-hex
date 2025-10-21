@@ -1,54 +1,112 @@
 import React, { useState, useEffect } from 'react';
 import ColorSwatch from './components/ColorSwatch';
 import ChoiceButton from './components/ChoiceButton';
-import ModeSelector from './components/ModeSelector';
 import ScoreBoard from './components/ScoreBoard';
+import StartScreen from './components/StartScreen';
+import EndScreen from './components/EndScreen';
 import { generateChoices } from './utils/generateChoices';
 import { colors } from './utils/colors';
 import { Difficulty } from './types';
 
+type GameScreen = 'start' | 'playing' | 'end';
+
+const TOTAL_ROUNDS = 10;
+
 const App: React.FC = () => {
+    const [gameScreen, setGameScreen] = useState<GameScreen>('start');
     const [difficulty, setDifficulty] = useState<Difficulty>('easy');
     const [currentColor, setCurrentColor] = useState<string>('');
     const [choices, setChoices] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
-    const [attempts, setAttempts] = useState<number>(0);
+    const [currentRound, setCurrentRound] = useState<number>(1);
+    const [feedback, setFeedback] = useState<string>('');
 
-    useEffect(() => {
-        startNewGame();
-    }, [difficulty]);
-
-    const startNewGame = () => {
+    const startNewRound = () => {
         const color = getRandomColor();
         setCurrentColor(color);
         const newChoices = generateChoices(color, difficulty);
         setChoices(newChoices);
-        setAttempts(0);
+        setFeedback('');
     };
 
     const getRandomColor = () => {
         return colors[Math.floor(Math.random() * colors.length)];
     };
 
+    const handleStart = (selectedDifficulty: Difficulty) => {
+        setDifficulty(selectedDifficulty);
+        setGameScreen('playing');
+        setScore(0);
+        setCurrentRound(1);
+        startNewRound();
+    };
+
     const handleChoice = (choice: string) => {
-        setAttempts(attempts + 1);
         if (choice === currentColor) {
             setScore(score + 1);
-            startNewGame();
+            setFeedback('✅ Correct!');
+        } else {
+            setFeedback(`❌ Wrong! It was ${currentColor}`);
         }
+
+        setTimeout(() => {
+            if (currentRound >= TOTAL_ROUNDS) {
+                setGameScreen('end');
+            } else {
+                setCurrentRound(currentRound + 1);
+                startNewRound();
+            }
+        }, 1500);
     };
+
+    const handleRestart = () => {
+        setGameScreen('start');
+        setScore(0);
+        setCurrentRound(1);
+    };
+
+    useEffect(() => {
+        if (gameScreen === 'playing') {
+            startNewRound();
+        }
+    }, [difficulty]);
 
     return (
         <div className="app">
-            <h1>🎨 What The Hex</h1>
-            <ScoreBoard score={score} attempts={attempts} />
-            <ModeSelector difficulty={difficulty} setDifficulty={setDifficulty} />
-            <ColorSwatch color={currentColor} />
-            <div className="choices">
-                {choices.map((choice, index) => (
-                    <ChoiceButton key={index} choice={choice} onSelect={handleChoice} />
-                ))}
-            </div>
+            {gameScreen === 'start' && (
+                <StartScreen onStart={handleStart} />
+            )}
+
+            {gameScreen === 'playing' && (
+                <>
+                    <h1>🎨 What The Hex</h1>
+                    <div className="level-indicator">
+                        Level {currentRound} of {TOTAL_ROUNDS}
+                    </div>
+                    <ScoreBoard score={score} attempts={currentRound - 1} />
+                    <ColorSwatch color={currentColor} />
+                    {feedback && <div className={`feedback ${feedback.includes('✅') ? 'correct' : 'incorrect'}`}>{feedback}</div>}
+                    <div className="choices">
+                        {choices.map((choice, index) => (
+                            <ChoiceButton 
+                                key={index} 
+                                choice={choice} 
+                                onSelect={handleChoice}
+                                disabled={feedback !== ''}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
+
+            {gameScreen === 'end' && (
+                <EndScreen 
+                    score={score} 
+                    totalRounds={TOTAL_ROUNDS} 
+                    difficulty={difficulty}
+                    onRestart={handleRestart}
+                />
+            )}
         </div>
     );
 };

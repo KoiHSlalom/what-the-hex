@@ -79,7 +79,7 @@ const App: React.FC = () => {
 
             {gameScreen === 'playing' && (
                 <>
-                    <h1>🎨 What The Hex</h1>
+                    <h1>What The Hex</h1>
                     <div className="level-indicator">
                         Level {currentRound} of {TOTAL_ROUNDS}
                     </div>

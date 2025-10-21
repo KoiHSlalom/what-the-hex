@@ -52,7 +52,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalRounds, difficulty, o
 
     return (
         <div className="end-screen">
-            <h1 className="game-title">🎨 Game Complete!</h1>
+            <h1 className="game-title">Game Complete!</h1>
             
             <div className="final-score-card">
                 <div className="performance-message">{getPerformanceMessage()}</div>

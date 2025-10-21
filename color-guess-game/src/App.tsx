@@ -40,7 +40,8 @@ const App: React.FC = () => {
 
     return (
         <div className="app">
-            <h1>Color Guessing Game</h1>
+            <h1>🎨 What The Hex</h1>
+            <ScoreBoard score={score} attempts={attempts} />
             <ModeSelector difficulty={difficulty} setDifficulty={setDifficulty} />
             <ColorSwatch color={currentColor} />
             <div className="choices">
@@ -48,7 +49,6 @@ const App: React.FC = () => {
                     <ChoiceButton key={index} choice={choice} onSelect={handleChoice} />
                 ))}
             </div>
-            <ScoreBoard score={score} attempts={attempts} />
         </div>
     );
 };

@@ -1,29 +1,17 @@
-function generateChoices(currentColor: string, allColors: string[], difficulty: 'easy' | 'medium' | 'hard'): string[] {
-    let numberOfChoices: number;
+import { colors } from './colors';
+import { Difficulty } from '../types';
 
-    switch (difficulty) {
-        case 'easy':
-            numberOfChoices = 2;
-            break;
-        case 'medium':
-            numberOfChoices = 4;
-            break;
-        case 'hard':
-            numberOfChoices = 6;
-            break;
-        default:
-            numberOfChoices = 4; // Default to medium if something goes wrong
+// Generate unique choices including the currentColor, shuffled.
+export function generateChoices(currentColor: string, difficulty: Difficulty): string[] {
+    const numberOfChoices = difficulty === 'easy' ? 2 : difficulty === 'medium' ? 4 : 6;
+    const pool = new Set<string>();
+    pool.add(currentColor);
+
+    while (pool.size < numberOfChoices) {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        pool.add(randomColor);
     }
 
-    const choices = new Set<string>();
-    choices.add(currentColor);
-
-    while (choices.size < numberOfChoices) {
-        const randomColor = allColors[Math.floor(Math.random() * allColors.length)];
-        choices.add(randomColor);
-    }
-
-    return Array.from(choices).sort(() => Math.random() - 0.5); // Shuffle the choices
+    // Shuffle by randomizing with sort (sufficient for small arrays here)
+    return Array.from(pool).sort(() => Math.random() - 0.5);
 }
-
-export default generateChoices;

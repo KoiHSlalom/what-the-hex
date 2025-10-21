@@ -1,31 +1,30 @@
 import React from 'react';
+import { Difficulty } from '../types';
 
 interface ModeSelectorProps {
-  selectedMode: string;
-  onModeChange: (mode: string) => void;
+  difficulty: Difficulty;
+  setDifficulty: (mode: Difficulty) => void;
 }
 
 const modes = [
-  { label: 'Easy', value: 'easy' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'Hard', value: 'hard' },
+  { label: 'Easy', value: 'easy' as Difficulty },
+  { label: 'Medium', value: 'medium' as Difficulty },
+  { label: 'Hard', value: 'hard' as Difficulty },
 ];
 
-const ModeSelector: React.FC<ModeSelectorProps> = ({ selectedMode, onModeChange }) => {
+const ModeSelector: React.FC<ModeSelectorProps> = ({ difficulty, setDifficulty }) => {
   return (
-    <div>
-      <h2>Select Difficulty Mode</h2>
-      <div>
+    <div className="mode-selector">
+      <h2>Select Difficulty</h2>
+      <div className="mode-buttons">
         {modes.map((mode) => (
-          <label key={mode.value}>
-            <input
-              type="radio"
-              value={mode.value}
-              checked={selectedMode === mode.value}
-              onChange={() => onModeChange(mode.value)}
-            />
+          <button
+            key={mode.value}
+            className={`mode-button ${difficulty === mode.value ? 'active' : ''}`}
+            onClick={() => setDifficulty(mode.value)}
+          >
             {mode.label}
-          </label>
+          </button>
         ))}
       </div>
     </div>

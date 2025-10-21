@@ -5,15 +5,13 @@ interface ColorSwatchProps {
 }
 
 const ColorSwatch: React.FC<ColorSwatchProps> = ({ color }) => {
-  const swatchStyle = {
-    backgroundColor: color,
-    width: '200px',
-    height: '200px',
-    border: '1px solid #000',
-    margin: '20px auto',
-  };
-
-  return <div style={swatchStyle}></div>;
+  return (
+    <div 
+      className="color-swatch" 
+      style={{ backgroundColor: color }}
+      title={color}
+    />
+  );
 };
 
 export default ColorSwatch;

@@ -21,7 +21,11 @@ body {
     padding: 40px;
     max-width: 600px;
     width: 100%;
+    min-height: 700px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 h1 {
@@ -120,7 +124,7 @@ h2 {
 
 .choice-button {
     background: white;
-    color: transparent;
+    color: #333;
     border: 2px solid #e0e0e0;
     padding: 16px 20px;
     text-align: center;
@@ -139,7 +143,6 @@ h2 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-color: #333;
     background: #fafafa;
-    color: #333;
 }
 
 .choice-button:active {
@@ -502,16 +505,14 @@ h2 {
 
 /* Disabled Button State */
 .choice-button:disabled {
-    opacity: 0.3;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    color: transparent;
 }
 
 .choice-button:disabled:hover {
     transform: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    color: transparent;
     border-color: #e0e0e0;
     background: white;
 }

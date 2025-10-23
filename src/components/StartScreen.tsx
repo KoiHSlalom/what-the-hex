@@ -10,7 +10,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
 
     return (
         <div className="start-screen">
-            <h1 className="game-title">What The Hex</h1>
+            <h1 className="game-title">Hue's that color?</h1>
             <div className="game-description">
                 <h2>How to Play</h2>
                 <p>Test your color perception skills!</p>

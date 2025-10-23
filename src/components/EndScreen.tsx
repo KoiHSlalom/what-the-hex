@@ -25,13 +25,13 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalRounds, difficulty, o
     };
 
     const handleShare = async () => {
-        const shareText = `🎨 I scored ${score}/${totalRounds} (${percentage}%) on What The Hex! Can you beat my score?\n\nDifficulty: ${getDifficultyLabel()}\n${getPerformanceMessage()}\n\nPlay now: ${window.location.href}`;
+        const shareText = `I scored ${score}/${totalRounds} (${percentage}%) on Hue's that color! Can you beat my score?\n\nDifficulty: ${getDifficultyLabel()}\n${getPerformanceMessage()}\n\nPlay now: ${window.location.href}`;
         
         // Try native share API first (mobile devices)
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'What The Hex - My Score',
+                    title: "Hue's that color? - My Score",
                     text: shareText,
                 });
             } catch (err) {

@@ -19,14 +19,16 @@ const App: React.FC = () => {
     const [choices, setChoices] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
     const [currentRound, setCurrentRound] = useState<number>(1);
-    const [feedback, setFeedback] = useState<string>('');
+    const [selectedChoice, setSelectedChoice] = useState<string>('');
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
     const startNewRound = () => {
         const color = getRandomColor();
         setCurrentColor(color);
         const newChoices = generateChoices(color, difficulty);
         setChoices(newChoices);
-        setFeedback('');
+        setSelectedChoice('');
+        setIsCorrect(null);
     };
 
     const getRandomColor = () => {
@@ -42,11 +44,12 @@ const App: React.FC = () => {
     };
 
     const handleChoice = (choice: string) => {
+        setSelectedChoice(choice);
         if (choice === currentColor) {
             setScore(score + 1);
-            setFeedback('✅ Correct!');
+            setIsCorrect(true);
         } else {
-            setFeedback(`❌ Wrong! It was ${currentColor}`);
+            setIsCorrect(false);
         }
 
         setTimeout(() => {
@@ -79,20 +82,21 @@ const App: React.FC = () => {
 
             {gameScreen === 'playing' && (
                 <>
-                    <h1>What The Hex</h1>
+                    <h1>Hue's that color?</h1>
                     <div className="level-indicator">
                         Level {currentRound} of {TOTAL_ROUNDS}
                     </div>
-                    <ScoreBoard score={score} attempts={currentRound - 1} />
                     <ColorSwatch color={currentColor} />
-                    {feedback && <div className={`feedback ${feedback.includes('✅') ? 'correct' : 'incorrect'}`}>{feedback}</div>}
                     <div className="choices">
                         {choices.map((choice, index) => (
                             <ChoiceButton 
                                 key={index} 
                                 choice={choice} 
                                 onSelect={handleChoice}
-                                disabled={feedback !== ''}
+                                disabled={selectedChoice !== ''}
+                                isSelected={choice === selectedChoice}
+                                isCorrect={choice === selectedChoice ? isCorrect : null}
+                                showCorrect={selectedChoice !== '' && choice === currentColor}
                             />
                         ))}
                     </div>

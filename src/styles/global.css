@@ -28,6 +28,7 @@ body {
 }
 
 h1 {
+    font-family: 'Sour Gummy', cursive;
     color: #333;
     font-size: 2.5rem;
     margin-bottom: 20px;
@@ -35,10 +36,15 @@ h1 {
 }
 
 h2 {
+    font-family: 'Sour Gummy', cursive;
     color: #555;
     font-size: 1.2rem;
     margin-bottom: 15px;
     font-weight: 600;
+}
+
+h3 {
+    font-family: 'Sour Gummy', cursive;
 }
 
 /* Score Board */
@@ -180,10 +186,11 @@ h2 {
 }
 
 .game-title {
+    font-family: 'Sour Gummy', cursive;
     font-size: 3rem;
     margin-bottom: 30px;
     color: #1a1a1a;
-    font-weight: 300;
+    font-weight: 600;
     letter-spacing: -1px;
 }
 

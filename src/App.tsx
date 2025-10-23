@@ -16,6 +16,7 @@ const App: React.FC = () => {
     const [gameScreen, setGameScreen] = useState<GameScreen>('start');
     const [difficulty, setDifficulty] = useState<Difficulty>('easy');
     const [currentColor, setCurrentColor] = useState<string>('');
+    const [previousColor, setPreviousColor] = useState<string>('');
     const [choices, setChoices] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
     const [currentRound, setCurrentRound] = useState<number>(1);
@@ -25,6 +26,7 @@ const App: React.FC = () => {
     const startNewRound = () => {
         const color = getRandomColor();
         setCurrentColor(color);
+        setPreviousColor(color);
         const newChoices = generateChoices(color, difficulty);
         setChoices(newChoices);
         setSelectedChoice('');
@@ -32,7 +34,16 @@ const App: React.FC = () => {
     };
 
     const getRandomColor = () => {
-        return colors[Math.floor(Math.random() * colors.length)];
+        let color;
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        do {
+            color = colors[Math.floor(Math.random() * colors.length)];
+            attempts++;
+        } while (color === previousColor && attempts < maxAttempts);
+        
+        return color;
     };
 
     const handleStart = (selectedDifficulty: Difficulty) => {
@@ -51,15 +62,21 @@ const App: React.FC = () => {
         } else {
             setIsCorrect(false);
         }
+    };
 
-        setTimeout(() => {
-            if (currentRound >= TOTAL_ROUNDS) {
-                setGameScreen('end');
-            } else {
-                setCurrentRound(currentRound + 1);
-                startNewRound();
-            }
-        }, 1500);
+    const handleNext = () => {
+        if (currentRound >= TOTAL_ROUNDS) {
+            setGameScreen('end');
+        } else {
+            setCurrentRound(currentRound + 1);
+            startNewRound();
+        }
+    };
+
+    const handleBack = () => {
+        setGameScreen('start');
+        setScore(0);
+        setCurrentRound(1);
     };
 
     const handleRestart = () => {
@@ -87,7 +104,7 @@ const App: React.FC = () => {
                         Level {currentRound} of {TOTAL_ROUNDS}
                     </div>
                     <ColorSwatch color={currentColor} />
-                    <div className="choices">
+                    <div className={`choices ${difficulty === 'medium' ? 'medium-layout' : ''}`}>
                         {choices.map((choice, index) => (
                             <ChoiceButton 
                                 key={index} 
@@ -99,6 +116,19 @@ const App: React.FC = () => {
                                 showCorrect={selectedChoice !== '' && choice === currentColor}
                             />
                         ))}
+                    </div>
+                    
+                    <div className="navigation-buttons">
+                        <button className="back-button" onClick={handleBack}>
+                            ← Back
+                        </button>
+                        <button 
+                            className="next-button" 
+                            onClick={handleNext}
+                            disabled={selectedChoice === ''}
+                        >
+                            {currentRound >= TOTAL_ROUNDS ? 'Finish' : 'Next →'}
+                        </button>
                     </div>
                 </>
             )}
